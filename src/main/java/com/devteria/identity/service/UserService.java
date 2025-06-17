@@ -1,19 +1,23 @@
 package com.devteria.identity.service;
 
 
-import com.devteria.identity.dto.UserCreationRequest;
-import com.devteria.identity.dto.UserResponse;
+import com.devteria.identity.dto.req.UserCreationRequest;
+import com.devteria.identity.dto.res.UserResponse;
 import com.devteria.identity.entity.User;
+import com.devteria.identity.enums.Role;
 import com.devteria.identity.exception.AppException;
 import com.devteria.identity.exception.ErrorCode;
 import com.devteria.identity.mapper.UserMapper;
 import com.devteria.identity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -23,6 +27,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public UserResponse createUser(UserCreationRequest req) {
 
         if (userRepository.existsByUsername(req.getUsername())) {
@@ -30,8 +37,12 @@ public class UserService {
         }
 
         User user = userMapper.toUser(req);
-        PasswordEncoder pw=new BCryptPasswordEncoder(10);
-        user.setPassword(pw.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
+
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
@@ -56,4 +67,14 @@ public class UserService {
     public void delete(String id) {
         userRepository.deleteById(id);
     }
+
+
+    public UserResponse getMyInfo(){
+        var ctx = SecurityContextHolder.getContext();
+        String name = ctx.getAuthentication().getName();
+        var u = userRepository.findByUsername(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.toUserResponse(u);
+
+    }
+
 }

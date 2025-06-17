@@ -1,4 +1,4 @@
-package com.devteria.identity.dto;
+package com.devteria.identity.dto.res;
 
 
 import lombok.AccessLevel;

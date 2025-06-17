@@ -1,10 +1,9 @@
 package com.devteria.identity.mapper;
 
-import com.devteria.identity.dto.UserCreationRequest;
-import com.devteria.identity.dto.UserResponse;
+import com.devteria.identity.dto.req.UserCreationRequest;
+import com.devteria.identity.dto.res.UserResponse;
 import com.devteria.identity.entity.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")

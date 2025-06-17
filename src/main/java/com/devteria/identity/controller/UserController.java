@@ -1,13 +1,14 @@
 package com.devteria.identity.controller;
 
 
-import com.devteria.identity.dto.ApiResponse;
-import com.devteria.identity.dto.UserCreationRequest;
-import com.devteria.identity.dto.UserResponse;
-import com.devteria.identity.entity.User;
+import com.devteria.identity.dto.res.ApiResponse;
+import com.devteria.identity.dto.req.UserCreationRequest;
+import com.devteria.identity.dto.res.UserResponse;
 import com.devteria.identity.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ApiResponse<List<UserResponse>> getUsers() {
         ApiResponse<List<UserResponse>> res = new ApiResponse<>();
@@ -55,5 +57,12 @@ public class UserController {
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id) {
         userService.delete(id);
+    }
+
+    @GetMapping("/my-info")
+    public ApiResponse<UserResponse> getMyInfo(){
+        var a = new ApiResponse<UserResponse>();
+        a.setResult(userService.getMyInfo());
+        return a;
     }
 }

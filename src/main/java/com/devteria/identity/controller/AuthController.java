@@ -1,10 +1,10 @@
 package com.devteria.identity.controller;
 
 
-import com.devteria.identity.dto.ApiResponse;
-import com.devteria.identity.dto.AuthRequest;
-import com.devteria.identity.dto.AuthResponse;
-import com.devteria.identity.dto.IntrospectRequest;
+import com.devteria.identity.dto.res.ApiResponse;
+import com.devteria.identity.dto.req.AuthRequest;
+import com.devteria.identity.dto.res.AuthResponse;
+import com.devteria.identity.dto.req.IntrospectRequest;
 import com.devteria.identity.service.AuthService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
