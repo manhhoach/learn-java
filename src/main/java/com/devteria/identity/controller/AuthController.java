@@ -1,7 +1,10 @@
 package com.devteria.identity.controller;
 
 
+import com.devteria.identity.dto.ApiResponse;
 import com.devteria.identity.dto.AuthRequest;
+import com.devteria.identity.dto.AuthResponse;
+import com.devteria.identity.dto.IntrospectRequest;
 import com.devteria.identity.service.AuthService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,19 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/login")
-    public boolean login(@RequestBody AuthRequest req){
-        return authService.authenicate(req);
+    public ApiResponse<AuthResponse> login(@RequestBody AuthRequest req){
+        var auth = authService.authenicate(req);
+        var res = new ApiResponse<AuthResponse>();
+        res.setResult(auth);
+        return res;
+    }
+
+
+    @PostMapping("/introspect")
+    public ApiResponse<Boolean> introspect(@RequestBody IntrospectRequest req){
+        var auth = authService.introspect(req);
+        var res = new ApiResponse<Boolean>();
+        res.setResult(auth);
+        return res;
     }
 }
