@@ -4,6 +4,7 @@ package com.devteria.identity.service;
 import com.devteria.identity.dto.req.AuthRequest;
 import com.devteria.identity.dto.res.AuthResponse;
 import com.devteria.identity.dto.req.IntrospectRequest;
+import com.devteria.identity.entity.Role;
 import com.devteria.identity.entity.User;
 import com.devteria.identity.exception.AppException;
 import com.devteria.identity.exception.ErrorCode;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -88,10 +90,10 @@ public class AuthService {
     }
 
     private String buildScope(User user) {
-        Set<String> roles = user.getRoles();
+        Set<Role> roles = user.getRoles();
         if (roles == null || roles.isEmpty()) {
             return "";
         }
-        return String.join(" ", roles);
+        return String.join(" ", roles.stream().map(e->e.getName()).toList());
     }
 }

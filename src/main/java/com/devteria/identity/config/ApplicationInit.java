@@ -31,7 +31,7 @@ public class ApplicationInit {
                 var hs = new HashSet<String>();
                 hs.add(RoleEnum.ADMIN.name());
 
-                user.setRoles(hs);
+             //   user.setRoles(hs);
                 userRepository.save(user);
             }
         };
