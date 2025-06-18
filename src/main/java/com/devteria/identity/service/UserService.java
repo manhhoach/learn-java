@@ -11,8 +11,8 @@ import com.devteria.identity.mapper.UserMapper;
 import com.devteria.identity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
@@ -39,14 +39,14 @@ public class UserService {
 
         HashSet<String> roles = new HashSet<>();
         roles.add(RoleEnum.USER.name());
-      //  user.setRoles(roles);
+        //  user.setRoles(roles);
 
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
 
     public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream().map(e->userMapper.toUserResponse(e)).toList();
+        return userRepository.findAll().stream().map(e -> userMapper.toUserResponse(e)).toList();
     }
 
     public UserResponse getById(String id) {
@@ -67,10 +67,10 @@ public class UserService {
     }
 
 
-    public UserResponse getMyInfo(){
+    public UserResponse getMyInfo() {
         var ctx = SecurityContextHolder.getContext();
         String name = ctx.getAuthentication().getName();
-        var u = userRepository.findByUsername(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+        var u = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toUserResponse(u);
 
     }

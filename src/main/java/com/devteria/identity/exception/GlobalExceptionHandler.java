@@ -1,7 +1,6 @@
 package com.devteria.identity.exception;
 
 import com.devteria.identity.dto.res.ApiResponse;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,8 +31,7 @@ public class GlobalExceptionHandler {
         ErrorCode e;
         try {
             e = ErrorCode.valueOf(ex.getFieldError().getDefaultMessage());
-        }
-        catch (Exception err){
+        } catch (Exception err) {
             e = ErrorCode.KEY_INVALID;
         }
         res.setMessage(e.getMessage());
@@ -41,8 +39,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(res);
     }
 
-    @ExceptionHandler(value= AccessDeniedException.class)
-    ResponseEntity<ApiResponse> handleAccessDenied(AccessDeniedException ex){
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handleAccessDenied(AccessDeniedException ex) {
         var res = new ApiResponse<>();
         var er = ErrorCode.UNAUTHORIZED;
         res.setCode(er.getCode());

@@ -9,6 +9,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     User toUser(UserCreationRequest req);
+
     void updateUser(@MappingTarget User user, UserCreationRequest req);
 
     // @Mapping(target = "id", source = "username") target sẽ mang giá trị của source

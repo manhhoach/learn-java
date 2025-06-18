@@ -24,23 +24,23 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENPOINTS={"/users","/auth/**"};
+    private final String[] PUBLIC_ENPOINTS = {"/users", "/auth/**"};
 
     @Value("${jwt.signerKey}")
     String SIGNER_KEY;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests(auth->
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth ->
                 auth
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENPOINTS).permitAll()
-                       // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
+                        // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated()
         );
 
-        http.oauth2ResourceServer(oauth2->
+        http.oauth2ResourceServer(oauth2 ->
                 oauth2
-                        .jwt(j->j.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .jwt(j -> j.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
         http.csrf(csrf -> csrf.disable());
@@ -49,19 +49,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtDecoder jwtDecoder(){
+    JwtDecoder jwtDecoder() {
         SecretKeySpec s = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS256");
         return NimbusJwtDecoder.withSecretKey(s).macAlgorithm(MacAlgorithm.HS256).build();
 
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
     @Bean
-    JwtAuthenticationConverter jwtAuthenticationConverter(){
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
         var jwtGranted = new JwtGrantedAuthoritiesConverter();
         jwtGranted.setAuthorityPrefix("ROLE_");
         var jwt = new JwtAuthenticationConverter();

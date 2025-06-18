@@ -20,9 +20,9 @@ public class ApplicationInit {
     PasswordEncoder passwordEncoder;
 
     @Bean
-    ApplicationRunner applicationRunner(UserRepository userRepository){
+    ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
-            if(!userRepository.existsByUsername("admin")){
+            if (!userRepository.existsByUsername("admin")) {
                 User user = new User();
                 user.setPassword(passwordEncoder.encode("12345678"));
                 user.setUsername("admin");
@@ -31,7 +31,7 @@ public class ApplicationInit {
                 var hs = new HashSet<String>();
                 hs.add(RoleEnum.ADMIN.name());
 
-             //   user.setRoles(hs);
+                //   user.setRoles(hs);
                 userRepository.save(user);
             }
         };

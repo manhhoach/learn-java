@@ -2,8 +2,8 @@ package com.devteria.identity.service;
 
 
 import com.devteria.identity.dto.req.AuthRequest;
-import com.devteria.identity.dto.res.AuthResponse;
 import com.devteria.identity.dto.req.IntrospectRequest;
+import com.devteria.identity.dto.res.AuthResponse;
 import com.devteria.identity.entity.Role;
 import com.devteria.identity.entity.User;
 import com.devteria.identity.exception.AppException;
@@ -24,10 +24,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,20 +35,20 @@ public class AuthService {
     @Value("${jwt.signerKey}")
     String SIGNER_KEY;
 
-    public AuthResponse authenicate(AuthRequest req){
-        var user = userRepository.findByUsername(req.getUsername()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+    public AuthResponse authenicate(AuthRequest req) {
+        var user = userRepository.findByUsername(req.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         var pw = new BCryptPasswordEncoder(10);
-        var res =  new AuthResponse();
-        if(pw.matches(req.getPassword(), user.getPassword())){
+        var res = new AuthResponse();
+        if (pw.matches(req.getPassword(), user.getPassword())) {
             var token = generateToken(user);
             res.setToken(token);
-        }else{
+        } else {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         return res;
     }
 
-    public Boolean introspect(IntrospectRequest req)  {
+    public Boolean introspect(IntrospectRequest req) {
         var token = req.getToken();
         try {
             JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
@@ -72,12 +69,12 @@ public class AuthService {
 
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
-        JWTClaimsSet claims =  new JWTClaimsSet.Builder()
+        JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("link.url")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
-                .claim("scope", buildScope(user)  )
+                .claim("scope", buildScope(user))
                 .build();
         Payload payload = new Payload(claims.toJSONObject());
         JWSObject jwt = new JWSObject(header, payload);
@@ -94,6 +91,6 @@ public class AuthService {
         if (roles == null || roles.isEmpty()) {
             return "";
         }
-        return String.join(" ", roles.stream().map(e->e.getName()).toList());
+        return String.join(" ", roles.stream().map(e -> e.getName()).toList());
     }
 }

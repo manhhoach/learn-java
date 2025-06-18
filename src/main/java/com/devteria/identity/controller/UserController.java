@@ -1,14 +1,13 @@
 package com.devteria.identity.controller;
 
 
-import com.devteria.identity.dto.res.ApiResponse;
 import com.devteria.identity.dto.req.UserCreationRequest;
+import com.devteria.identity.dto.res.ApiResponse;
 import com.devteria.identity.dto.res.UserResponse;
 import com.devteria.identity.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-    public ApiResponse<UserResponse> getMyInfo(){
+    public ApiResponse<UserResponse> getMyInfo() {
         var a = new ApiResponse<UserResponse>();
         a.setResult(userService.getMyInfo());
         return a;
