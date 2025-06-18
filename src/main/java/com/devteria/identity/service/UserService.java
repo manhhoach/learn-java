@@ -4,20 +4,18 @@ package com.devteria.identity.service;
 import com.devteria.identity.dto.req.UserCreationRequest;
 import com.devteria.identity.dto.res.UserResponse;
 import com.devteria.identity.entity.User;
-import com.devteria.identity.enums.Role;
+import com.devteria.identity.enums.RoleEnum;
 import com.devteria.identity.exception.AppException;
 import com.devteria.identity.exception.ErrorCode;
 import com.devteria.identity.mapper.UserMapper;
 import com.devteria.identity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -40,7 +38,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
+        roles.add(RoleEnum.USER.name());
         user.setRoles(roles);
 
         userRepository.save(user);

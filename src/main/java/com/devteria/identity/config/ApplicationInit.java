@@ -2,7 +2,7 @@ package com.devteria.identity.config;
 
 
 import com.devteria.identity.entity.User;
-import com.devteria.identity.enums.Role;
+import com.devteria.identity.enums.RoleEnum;
 import com.devteria.identity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 
 @Configuration
@@ -30,7 +29,7 @@ public class ApplicationInit {
                 user.setDob(LocalDate.now());
 
                 var hs = new HashSet<String>();
-                hs.add(Role.ADMIN.name());
+                hs.add(RoleEnum.ADMIN.name());
 
                 user.setRoles(hs);
                 userRepository.save(user);

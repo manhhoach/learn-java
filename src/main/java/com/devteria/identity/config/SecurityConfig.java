@@ -1,8 +1,6 @@
 package com.devteria.identity.config;
 
 
-import com.devteria.identity.enums.Role;
-import com.nimbusds.jose.JWSAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,9 +38,11 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
         );
 
-        http.oauth2ResourceServer(x->x.jwt(j->j
-                .decoder(jwtDecoder())
-                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
+        http.oauth2ResourceServer(oauth2->
+                oauth2
+                        .jwt(j->j.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+        );
         http.csrf(csrf -> csrf.disable());
 
         return http.build();

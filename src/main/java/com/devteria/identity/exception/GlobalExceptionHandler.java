@@ -1,7 +1,9 @@
 package com.devteria.identity.exception;
 
 import com.devteria.identity.dto.res.ApiResponse;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,7 +23,7 @@ public class GlobalExceptionHandler {
         var res = new ApiResponse<>();
         res.setMessage(ex.getErrorCode().getMessage());
         res.setCode(ex.getErrorCode().getCode());
-        return ResponseEntity.badRequest().body(res);
+        return ResponseEntity.status(ex.getErrorCode().getStatusCode()).body(res);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -37,5 +39,15 @@ public class GlobalExceptionHandler {
         res.setMessage(e.getMessage());
         res.setCode(e.getCode());
         return ResponseEntity.badRequest().body(res);
+    }
+
+    @ExceptionHandler(value= AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handleAccessDenied(AccessDeniedException ex){
+        var res = new ApiResponse<>();
+        var er = ErrorCode.UNAUTHORIZED;
+        res.setCode(er.getCode());
+        res.setMessage(er.getMessage());
+
+        return ResponseEntity.status(er.getStatusCode()).body(res);
     }
 }
