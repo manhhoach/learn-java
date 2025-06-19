@@ -2,6 +2,7 @@ package com.devteria.identity.service;
 
 
 import com.devteria.identity.dto.req.UserCreationRequest;
+import com.devteria.identity.dto.res.UserInfoResponse;
 import com.devteria.identity.dto.res.UserResponse;
 import com.devteria.identity.entity.User;
 import com.devteria.identity.enums.RoleEnum;
@@ -14,8 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -67,12 +71,29 @@ public class UserService {
     }
 
 
-    public UserResponse getMyInfo() {
+    public UserInfoResponse getMyInfo() {
         var ctx = SecurityContextHolder.getContext();
-        String name = ctx.getAuthentication().getName();
-        var u = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        return userMapper.toUserResponse(u);
+        var authentication = ctx.getAuthentication();
 
+        if (authentication == null || authentication.getName() == null) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        String username = authentication.getName();
+        List<Object[]> results = userRepository.getDetail(username);
+
+        if (results.isEmpty()) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        Set<String> roles = results.stream()
+                .map(row -> (String) row[1]) // role_name
+                .collect(Collectors.toSet());
+
+        var res = new UserInfoResponse();
+        res.setUsername(username);
+        res.setRoles(roles);
+        return res;
     }
 
 }

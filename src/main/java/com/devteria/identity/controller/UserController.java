@@ -3,6 +3,7 @@ package com.devteria.identity.controller;
 
 import com.devteria.identity.dto.req.UserCreationRequest;
 import com.devteria.identity.dto.res.ApiResponse;
+import com.devteria.identity.dto.res.UserInfoResponse;
 import com.devteria.identity.dto.res.UserResponse;
 import com.devteria.identity.service.UserService;
 import jakarta.validation.Valid;
@@ -59,8 +60,8 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-    public ApiResponse<UserResponse> getMyInfo() {
-        var a = new ApiResponse<UserResponse>();
+    public ApiResponse<UserInfoResponse> getMyInfo() {
+        var a = new ApiResponse<UserInfoResponse>();
         a.setResult(userService.getMyInfo());
         return a;
     }
